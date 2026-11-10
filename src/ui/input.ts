@@ -14,10 +14,14 @@ const toCanvasPoint = (canvas: HTMLCanvasElement, event: PointerEvent): Point =>
   };
 };
 
-export const trackPointer = (canvas: HTMLCanvasElement): PointerInput => {
+export const trackPointer = (canvas: HTMLCanvasElement, onPress: () => void): PointerInput => {
   let latest: Point | null = null;
   canvas.addEventListener('pointermove', (event) => {
     latest = toCanvasPoint(canvas, event);
+  });
+  canvas.addEventListener('pointerdown', (event) => {
+    latest = toCanvasPoint(canvas, event);
+    onPress();
   });
   return { position: () => latest };
 };
