@@ -1,0 +1,33 @@
+name: Bug
+description: Something in the game doesn't work
+labels: [bug]
+projects: [DanniqueK/4]
+body:
+  - type: textarea
+    id: what-happens
+    attributes:
+      label: What happens
+      description: What did you do, and what went wrong?
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What should happen
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      value: |
+        1.
+  - type: textarea
+    id: done-when
+    attributes:
+      label: Done when
+      value: |
+        - [ ] A test reproduces the bug and now passes
+        - [ ] `npm run check` passes
+    validations:
+      required: true

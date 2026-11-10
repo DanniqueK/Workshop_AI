@@ -1,0 +1,27 @@
+name: Feature
+description: Something the game should do
+labels: [enhancement]
+projects: [DanniqueK/4]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What
+      description: What should the player see or be able to do, and why?
+    validations:
+      required: true
+  - type: textarea
+    id: done-when
+    attributes:
+      label: Done when
+      description: A checklist that tells you, or the agent, when this is finished.
+      value: |
+        - [ ]
+        - [ ] `npm run check` passes
+    validations:
+      required: true
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notes
+      description: Hints, links, out of scope.
