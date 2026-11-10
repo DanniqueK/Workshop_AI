@@ -1,7 +1,8 @@
 import { aimAngle, directionOf } from './game/aim.ts';
-import { gridWidth, type Colour, type GridLayout, type Point } from './game/grid.ts';
+import { gridWidth, setCell, type Colour, type GridLayout, type Point } from './game/grid.ts';
 import { createRandomLevel, randomColour } from './game/level.ts';
 import { launchShot, stepShot, type Shot } from './game/shot.ts';
+import { hitsGrid, landingCell } from './game/snap.ts';
 import { trackPointer } from './ui/input.ts';
 import { clear, drawAimLine, drawBubble, drawGrid } from './ui/render.ts';
 
@@ -23,7 +24,7 @@ canvas.width = gridWidth(LAYOUT);
 canvas.height = CANVAS_HEIGHT;
 
 const launcher: Point = { x: canvas.width / 2, y: CANVAS_HEIGHT - LAYOUT.radius * 2 };
-const grid = createRandomLevel(LAYOUT, FILLED_ROWS, Math.random);
+let grid = createRandomLevel(LAYOUT, FILLED_ROWS, Math.random);
 let loadedColour: Colour = randomColour(Math.random);
 let shot: Shot | null = null;
 
@@ -37,8 +38,16 @@ const pointer = trackPointer(canvas, () => {
 
 const update = (seconds: number): void => {
   if (shot === null) return;
-  shot = stepShot(shot, seconds, canvas.width, LAYOUT.radius);
-  if (shot.position.y < -LAYOUT.radius) shot = null;
+  // Small steps, so a fast shot can't skip over a bubble between two frames.
+  const steps = Math.ceil((SHOT_SPEED * seconds) / (LAYOUT.radius / 2));
+  for (let step = 0; step < steps; step++) {
+    shot = stepShot(shot, seconds / steps, canvas.width, LAYOUT.radius);
+    if (!hitsGrid(grid, shot.position)) continue;
+    const cell = landingCell(grid, shot.position);
+    if (cell !== null) grid = setCell(grid, cell, shot.colour);
+    shot = null;
+    return;
+  }
 };
 
 const draw = (): void => {
