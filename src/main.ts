@@ -1,6 +1,7 @@
 import { aimAngle, directionOf } from './game/aim.ts';
 import { gridWidth, setCell, type Colour, type GridLayout, type Point } from './game/grid.ts';
 import { createRandomLevel, randomColour } from './game/level.ts';
+import { popGroup } from './game/match.ts';
 import { launchShot, stepShot, type Shot } from './game/shot.ts';
 import { hitsGrid, landingCell } from './game/snap.ts';
 import { trackPointer } from './ui/input.ts';
@@ -44,7 +45,7 @@ const update = (seconds: number): void => {
     shot = stepShot(shot, seconds / steps, canvas.width, LAYOUT.radius);
     if (!hitsGrid(grid, shot.position)) continue;
     const cell = landingCell(grid, shot.position);
-    if (cell !== null) grid = setCell(grid, cell, shot.colour);
+    if (cell !== null) grid = popGroup(setCell(grid, cell, shot.colour), cell);
     shot = null;
     return;
   }
