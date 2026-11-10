@@ -27,7 +27,20 @@ export const drawBubble = (context: CanvasRenderingContext2D, centre: Point, rad
   context.fill();
 };
 
-export const drawGrid = (context: CanvasRenderingContext2D, grid: Grid): void => {
+export const drawAimLine = (context: CanvasRenderingContext2D, from: Point, direction: Point, length: number): void => {
+  context.save();
+  context.setLineDash([4, 10]);
+  context.lineCap = 'round';
+  context.lineWidth = 3;
+  context.strokeStyle = 'rgba(255, 255, 255, 0.6)';
+  context.beginPath();
+  context.moveTo(from.x, from.y);
+  context.lineTo(from.x + direction.x * length, from.y + direction.y * length);
+  context.stroke();
+  context.restore();
+};
+
+export const drawGrid =(context: CanvasRenderingContext2D, grid: Grid): void => {
   grid.cells.forEach((cells, row) => {
     cells.forEach((cell, col) => {
       if (cell !== null) drawBubble(context, cellToPixel(grid.layout, { row, col }), grid.layout.radius, cell);
